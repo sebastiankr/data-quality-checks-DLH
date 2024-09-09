@@ -1,0 +1,5 @@
+table_name,cols_only_in_uat,cols_only_in_prod,uat_primary_keys,prod_primary_keys
+s_person_pregnant,"['pregnant', 'reported_at']",[],[],"['record_owner', 'record_source_person_pregnant_id', 'load_dt', 'record_source_person_id']"
+s_question,"['form_id', 'form_short_name']",[],"['record_owner', 'record_source_question_id', 'load_dt']","['record_owner', 'record_source_question_id', 'load_dt']"
+sal_person_matched,[],[],"['delta_load_id', 'load_dt', 'sal_person_SID']",[]
+s_person_MPI,[],[],"['record_owner', 'h_person_sid']",[]

@@ -1,0 +1,14 @@
+{
+   "project_uat_id": "cdphe-lakehouse-infra-uat",
+   "project_prod_id": "cdphe-lakehouse-infra-prod",
+   "smtp":{
+      "host" : "smtp.gmail.com",
+      "port" : "587",
+      "user" : "reddy.sushmitha@state.co.us",
+      "password" : " "
+   },
+   "email" : {
+      "from" : " ",
+      "to" : " "
+   }
+}
