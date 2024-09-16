@@ -8,7 +8,7 @@ def get_tests():    # write Fibonacci series up to n
             "source_query":
 """
 SELECT  pc.patient_id as record_source_person_id, pc.gender_code as current_gender
-FROM `cdphe-lakehouse-infra-prod.ciis_replica.dbo_patients_core` pc
+FROM `ciis_replica.dbo_patients_core` pc
 WHERE pc.gender_code='F'
 ORDER BY pc.patient_id
 --LIMIT 10
@@ -16,7 +16,7 @@ ORDER BY pc.patient_id
             "target_query":
 """
 SELECT sppm.record_source_person_id, sppm.current_gender
-FROM `cdphe-lakehouse-infra-prod.raw_vault.s_person_profile_main`  sppm
+FROM `raw_vault.s_person_profile_main`  sppm
 where record_source = 'ciis' AND sppm.current_gender = 'Female' AND sppm.effective_end_dt IS NULL
 ORDER BY sppm.record_source_person_id
 --LIMIT 10
