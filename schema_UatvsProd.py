@@ -27,7 +27,7 @@ def get_bigquery_client(project_id):
 
 if __name__ == '__main__':
     config = load_config('config.json')
-    project_id = config.get('project_id')
+    project_id = config.get('project_prod_id')
    
     client = get_bigquery_client(project_id)
    
