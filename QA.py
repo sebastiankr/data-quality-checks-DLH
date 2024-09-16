@@ -15,7 +15,7 @@ else:
     # Create a new DataFrame if the file does not exist
     df = pd.DataFrame(columns=["date","source","test_name"])
 
-project_id='cdphe-lakehouse-infra-uat'
+project_id='cdphe-lakehouse-infra-prod'
 
 def get_mismatched_dtypes(df1, df2):
     df1_types = set(df1.dtypes.items())
@@ -50,8 +50,8 @@ def qa_compare(source_df, target_df):
 new_tests = []
 for t in tests:
     # print(t["source_query"])
-    source_df = pandas_gbq.read_gbq(t["source_query"])
-    target_df = pandas_gbq.read_gbq(t["target_query"])
+    source_df = pandas_gbq.read_gbq(t["source_query"], project_id=project_id)
+    target_df = pandas_gbq.read_gbq(t["target_query"], project_id=project_id)
     comparison = qa_compare(source_df, target_df)
     comparison["date"]= datetime.now(ZoneInfo('America/Denver')).strftime("%Y-%m-%d %H:%M:%S")
     comparison["source"]= t["source"]
