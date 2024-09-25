@@ -229,14 +229,14 @@ ORDER BY sppm.record_source_person_id
 """
 SELECT 
 --count(*)
-pc.id as record_source_person_condition_id, pc.group_living,
+pc.id as record_source_person_condition_id,
 l.id as record_source_lab_id, l.collection_date,
 pr.first_name as provider_first_name,
 lt.id as record_source_labtest_id,lt.loinc_code,
 ltr.test_result,
 lts.code as test_status
 FROM `epitrax_replica.public_person_condition` pc
-JOIN `epitrax_replica.public_person_condition_lab` pcl ON pcl.person_condition_id = pc.id
+LEFT JOIN `epitrax_replica.public_person_condition_lab` pcl ON pcl.person_condition_id = pc.id
 JOIN `epitrax_replica.public_lab` l ON l.id = pcl.lab_id
 LEFT JOIN `epitrax_replica.public_provider` pr ON l.provider_id = pr.id
 LEFT JOIN `epitrax_replica.public_lab_test` lt ON l.id = lt.lab_id
@@ -248,17 +248,19 @@ ORDER BY pc.id,l.id, lt.id
             "target_query":
 """
 SELECT 
-spc.record_source_person_condition_id, spc.group_living,
-sls.record_source_lab_id, sls.collection_date, sls.provider_first_name,
+--count(*)
+spc.record_source_person_condition_id,
+slm.record_source_lab_id, slm.collection_date, slm.provider_first_name,
 slt.record_source_labtest_id, slt.loinc_code, slt.test_result, slt.test_status
 FROM `raw_vault.s_person_condition` spc 
 JOIN `raw_vault.l_person_condition_lab` lpcl ON lpcl.h_person_condition_sid = spc.h_person_condition_sid AND lpcl.record_owner = spc.record_owner
-LEFT JOIN `raw_vault.s_lab_main` sls ON lpcl.h_lab_sid = sls.h_lab_sid AND sls.record_owner = spc.record_owner
-LEFT JOIN `raw_vault.s_lab_labtest` slt ON lpcl.h_labtest_sid = slt.h_labtest_sid AND slt.record_owner = spc.record_owner
-WHERE spc.effective_end_dt IS NULL AND sls.effective_end_dt IS NULL AND slt.effective_end_dt IS NULL
-GROUP BY spc.record_source_person_condition_id, spc.group_living, sls.record_source_lab_id, sls.collection_date, sls.provider_first_name, slt.record_source_labtest_id,slt.loinc_code, slt.test_result, slt.test_status
-ORDER BY spc.record_source_person_condition_id, sls.record_source_lab_id, slt.record_source_labtest_id
---LIMIT 50
+LEFT JOIN `raw_vault.s_lab_main` slm ON lpcl.h_lab_sid = slm.h_lab_sid AND slm.record_owner = spc.record_owner
+LEFT JOIN `raw_vault.l_lab_labtest` lll ON lll.h_lab_sid = slm.h_lab_sid AND slm.record_owner = spc.record_owner
+LEFT JOIN `raw_vault.s_lab_labtest` slt ON lll.h_labtest_sid = slt.h_labtest_sid AND slt.record_owner = spc.record_owner
+WHERE spc.effective_end_dt IS NULL AND slm.effective_end_dt IS NULL AND slt.effective_end_dt IS NULL
+--GROUP BY spc.record_source_person_condition_id, slm.record_source_lab_id, slm.collection_date, slm.provider_first_name, slt.record_source_labtest_id,slt.loinc_code, slt.test_result, slt.test_status
+ORDER BY spc.record_source_person_condition_id, slm.record_source_lab_id, slt.record_source_labtest_id
+--LIMIT 10
 """,
             "notes": "labs without tests cause problems, link needs nullable tests"
         },
