@@ -9,7 +9,7 @@ from UATvsPROD import compare_schemas
 import csv
 
 # Configure logging
-logging.basicConfig(filename='bigquery_logs.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+#logging.basicConfig(filename='bigquery_logs.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 def load_config(path):
     with open(path, 'r') as f:
@@ -35,8 +35,8 @@ if __name__ == '__main__':
     df_table = pd.DataFrame(get_table_info(client))
     df_table.to_csv('table_details.csv', index=False)
    
-    project_id_uat = 'cdphe-lakehouse-infra-uat'
-    project_id_prod = 'cdphe-lakehouse-infra-prod'
+    project_id_uat = config.get('project_uat_id')
+    project_id_prod = config.get('project_prod_id')
     dataset_id = 'raw_vault'
 
     # Fetch schema details for UAT and Prod

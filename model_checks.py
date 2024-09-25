@@ -6,14 +6,21 @@ from zoneinfo import ZoneInfo
 import pandas_gbq
 import logging
 import json
-logging.basicConfig(filename='model_checks.log',level=logging.INFO,format='%(asctime)s - %(levelname)s - %(message)s')
+#logging.basicConfig(filename='model_checks.log',level=logging.INFO,format='%(asctime)s - %(levelname)s - %(message)s')
 
 with open('config.json', 'r') as f:
         config = json.load(f)
 project_ids= {'uat':config.get('project_uat_id'),
               'prod':config.get('project_prod_id')}
+output_folder='results'
+if not os.path.exists(output_folder):
+    os.makedirs(output_folder)
+
 for env,project_id in project_ids.items():
-     csv_file=f'model_checks_{env}.csv'
+     env_folder=os.path.join(output_folder,env)
+     if not os.path.exists(env_folder):
+         os.makedirs(env_folder)
+     csv_file=os.path.join(env_folder,f"model_checks_{env}.csv")
      if os.path.exists(csv_file):
         # Load existing data from the CSV file
         df = pd.read_csv(csv_file)
